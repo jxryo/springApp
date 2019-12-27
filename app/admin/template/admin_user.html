@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='asset/mdui/css/mdui.min.css') }}">
+    <script src="{{ url_for('.static', filename='asset/mdui/js/mdui.min.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/jquery.min.js') }}"></script>
+    <title>1nfinite-Admin</title>
+
+
+</head>
+<body class="mdui-theme-layout-dark mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded mdui-drawer-body-left"
+      style="margin-top: 20px;">
+
+<header class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide">
+    <div class="mdui-toolbar mdui-color-indigo">
+        <span class="mdui-btn mdui-btn-icon " mdui-drawer="{target: '#main-drawer', swipe: true}"><i
+                class="mdui-icon material-icons">menu</i></span>
+        <i class="mdui-icon material-icons">vpn_key</i>
+        <a href="javascript:;" class="mdui-typo-headline">用户管理</a>
+        <!-- <a href="javascript:;" class="mdui-typo-title">动态</a> -->
+        <div class="mdui-toolbar-spacer"></div>
+        <div class="mdui-textfield mdui-textfield-expandable">
+            <button class="mdui-textfield-icon mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i>
+            </button>
+            <input class="mdui-textfield-input" type="text" placeholder="Search"/>
+            <button class="mdui-textfield-close mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">close</i>
+            </button>
+        </div>
+        <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">person</i></a>
+    </div>
+</header>
+
+<!-- 侧边栏 -->
+<div class="mdui-drawer" id="main-drawer">
+
+    <div class="mdui-list">
+        <a class="mdui-list-item mdui-ripple" href="/web">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+            <div class="mdui-list-item-content">返回首页</div>
+        </a>
+        <a class="mdui-list-item mdui-ripple" href="../">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">view_quilt</i>
+            <div class="mdui-list-item-content">后台总览</div>
+        </a>
+
+        <a class="mdui-list-item mdui-ripple" href="../visitor">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">assignment_turned_in</i>
+            <div class="mdui-list-item-content">访客记录</div>
+        </a>
+        <a class="mdui-list-item mdui-ripple mdui-list-item-active">
+            <i class="mdui-list-item-icon mdui-icon material-icons">assignment_ind</i>
+            <div class="mdui-list-item-content">用户管理</div>
+        </a>
+        <a class="mdui-list-item mdui-ripple" href="../channel">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">keyboard_voice</i>
+            <div class="mdui-list-item-content">频道管理</div>
+        </a>
+        <a class="mdui-list-item mdui-ripple" href="../topic">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">chat_bubble</i>
+            <div class="mdui-list-item-content">话题管理</div>
+        </a>
+        <a class="mdui-list-item mdui-ripple" href="../game">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">videogame_asset</i>
+            <div class="mdui-list-item-content">游戏公墓</div>
+        </a>
+    </div>
+</div>
+
+<div class="mdui-container">
+    <h4>用户管理</h4>
+    <table class="mdui-table mdui-table-hoverable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>uesername</th>
+            <th>admin</th>
+            <th>ban</th>
+            <th>nickname</th>
+            <th>sex</th>
+            <th>编辑</th>
+            <th>删除</th>
+        </tr>
+        </thead>
+        <tbody id="user_table">
+
+        </tbody>
+    </table>
+    <div style="display:block; height:20px"></div>
+    <div class="mdui-divider"></div>
+    <div style="display:block; height:20px"></div>
+    <div class="mdui-row">
+        <div class="mdui-col-sm-2" align="center">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="first_page"
+                    onclick="load_user_onbutton(1)">第1页
+            </button>
+        </div>
+        <div class="mdui-col-sm-2" align="center">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="page_up"
+                    onclick="load_user_onbutton(pnum.value-1)">上一页
+            </button>
+        </div>
+        <div class="mdui-col-sm-2">
+            <div class="mdui-row">
+                <span class="mdui-col-sm-3" align="right">第</span>
+                <div class="mdui-col-sm-3">
+                    <input class="mdui-textfield-input" type="text" style="padding-top: 0px;padding-bottom: 16px;"
+                           id="page_num" value="1"/></div>
+                <span class="mdui-col-sm-3" id="page_count">/0页</span>
+                <button class="mdui-col-sm-3 mdui-btn mdui-btn-icon mdui-btn-dense mdui-color-theme-accent mdui-ripple"
+                        onclick="load_user_onbutton(pnum.value)">Go
+                </button>
+            </div>
+        </div>
+        <div class="mdui-col-sm-2" align="center">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="page_down"
+                    onclick="load_user_onbutton(parseInt(pnum.value)+1)">下一页
+            </button>
+        </div>
+        <div class="mdui-col-sm-2" align="center">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="last_page"
+                    onclick="load_user_onbutton(page_count)">最末页
+            </button>
+        </div>
+    </div>
+    {#    编辑页面#}
+    <div class="mdui-dialog" id="editDialog">
+        <div class="mdui-dialog-title">编辑用户</div>
+        <div class="mdui-dialog-content">
+            <div class="mdui-textfield">
+                <i class="mdui-icon material-icons">assignment_ind</i>
+                <label class="mdui-textfield-label">Admin</label>
+                <input class="mdui-textfield-input" type="text" id="re_admin"/>
+            </div>
+            <div class="mdui-textfield">
+                <i class="mdui-icon material-icons">block</i>
+                <label class="mdui-textfield-label">Ban</label>
+                <input class="mdui-textfield-input" type="text" id="re_ban"/>
+            </div>
+            <div class="mdui-textfield">
+                <i class="mdui-icon material-icons">child_care</i>
+                <label class="mdui-textfield-label">Nickname</label>
+                <input class="mdui-textfield-input" type="text" id="re_nickname"/>
+            </div>
+            <div class="mdui-textfield">
+                <i class="mdui-icon material-icons">wc</i>
+                <label class="mdui-textfield-label">Sex</label>
+                <input class="mdui-textfield-input" type="text" id="re_sex"/>
+            </div>
+            <div class="mdui-textfield">
+                <i class="mdui-icon material-icons">lock</i>
+                <label class="mdui-textfield-label">Password</label>
+                <input class="mdui-textfield-input" type="text" id="re_password"/>
+                <input class="mdui-hidden" type="text" id="re_uid"/>
+            </div>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+            <button class="mdui-btn mdui-ripple" onclick="change_user()">确认</button>
+        </div>
+    </div>
+
+    {#    删除页面#}
+    <div class="mdui-dialog" id="deleteDialog">
+        <div class="mdui-dialog-title">删除用户</div>
+        <div class="mdui-dialog-content">
+        <div class="mdui-dialog-title">确定删除用户名为
+            <div class="mdui-chip">
+                <span class="mdui-chip-icon mdui-color-red"><i class="mdui-icon material-icons">face</i></span>
+                <span class="mdui-chip-title" id="user_span">刘思杰</span>
+            </div>
+            的用户？
+        </div>
+        <div class="mdui-dialog-content">此操作将非常暴力🐸，且不可挽回！</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+            <button class="mdui-btn mdui-ripple" onclick="delete_user()">确认</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let data;
+    let page_count;
+    let delete_uid;
+    mdui.mutation();
+    let edit_dialog = new mdui.Dialog("#editDialog");
+    let delete_dialog = new mdui.Dialog("#deleteDialog");
+    let admin_label = document.getElementById('re_admin');
+    let ban_label = document.getElementById('re_ban');
+    let nickname_label = document.getElementById('re_nickname');
+    let sex_label = document.getElementById('re_sex');
+    let password_label = document.getElementById('re_password');
+    let uid_label = document.getElementById('re_uid');
+
+    let pcount = document.getElementById('page_count');
+    let pnum = document.getElementById('page_num');
+
+    let up_button = document.getElementById('page_up');
+    let down_button = document.getElementById('page_down');
+    let first_button = document.getElementById('first_page');
+    let last_button = document.getElementById('last_page');
+
+
+
+    function open_edit_dialog(i) {
+        console.log(data[i]);
+        admin_label.value = data[i].admin;
+        ban_label.value = data[i].ban;
+        nickname_label.value = data[i].nickname;
+        sex_label.value = data[i].sex;
+        uid_label.value = data[i].uid;
+        edit_dialog.open();
+    }
+
+    function change_user(i) {
+        let admin = document.getElementById('re_admin').value;
+        let ban = document.getElementById('re_ban').value;
+        let nickname = document.getElementById('re_nickname').value;
+        let sex = document.getElementById('re_sex').value;
+        let password = document.getElementById('re_password').value;
+        let uid = document.getElementById('re_uid').value;
+        $.post('/api/users/admin_update', {
+            'id': uid,
+            'admin': admin,
+            'ban': ban,
+            'nickname': nickname,
+            'sex': sex,
+            'password': password
+        }, function (d) {
+            if (0 == d.status) {
+                edit_dialog.close();
+                mdui.alert(d.message, function () {
+                    pnum = document.getElementById('page_num');
+                    load_user_onbutton(pnum.value);
+                });
+            }
+            else if (1 == d.status) {
+                mdui.alert(d.message, d.error_message);
+            }
+            else {
+                mdui.alert(d.message);
+            }
+        })
+
+    }
+
+    function open_delete_dialog(i) {
+        console.log(data[i]);
+        delete_uid = data[i].uid;
+        let user_span = document.getElementById('user_span');
+        user_span.innerHTML = data[i].username;
+        delete_dialog.open();
+    }
+
+    function get_page_num() {
+        $.post('/api/users/count', {}, function (d) {
+            if (d.status == 0) {
+                pcount.innerHTML = '/' + d.page_count + '页';
+                page_count = d.page_count;
+            }
+            if (d.status == 1) {
+                alert('获取页数失败' + c.error_message)
+            }
+        })
+    }
+
+    function load_user_onbutton(p) {
+        first_button.removeAttribute('disabled');
+        last_button.removeAttribute('disabled');
+        up_button.removeAttribute('disabled');
+        down_button.removeAttribute('disabled');
+
+        let oTab = document.getElementById('user_table');
+        pnum = document.getElementById('page_num');
+        if(p<1){p=1}
+        if(p>page_count){p=page_count}
+        pnum.value = p;
+        $.post('/api/users/list', {'page': p}, function (d) {
+            data = d.data;
+            if (0 == d.status) {
+                let rowNum = oTab.rows.length;
+                for (let i = 0; i < rowNum; i++) {
+                    oTab.deleteRow(i);
+                    rowNum = rowNum - 1;
+                    i = i - 1;
+                }
+                for (let i = 0; i < d.data.length; i++) {
+                    let oTr = document.createElement('tr');
+                    oTr.innerHTML = '<td>' + d.data[i].uid + '</td>' + '<td>' + d.data[i].username + '</td>' + '<td>' + d.data[i].admin + '</td>' + '<td>' + d.data[i].ban + '</td>' + '<td>' + d.data[i].nickname + '</td>' + '<td>' + d.data[i].sex + '</td>' + '<td><button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" onclick="open_edit_dialog(' + i + ')">编辑</button></td>' + '<td><button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" onclick="open_delete_dialog(' + i + ')">删除</button></td>';
+                    oTab.appendChild(oTr);
+                }
+                mdui.mutation();
+            }
+            else if (2 == d.status) {
+                let rowNum = oTab.rows.length;
+                for (let i = 0; i < rowNum; i++) {
+                    oTab.deleteRow(i);
+                    rowNum = rowNum - 1;
+                    i = i - 1;
+                }
+                for (let i = 0; i < d.data.length; i++) {
+                    let oTr = document.createElement('tr');
+                    oTr.innerHTML = '<td>' + d.data[i].uid + '</td>' + '<td>' + d.data[i].username + '</td>' + '<td>' + d.data[i].admin + '</td>' + '<td>' + d.data[i].ban + '</td>' + '<td>' + d.data[i].nickname + '</td>' + '<td>' + d.data[i].sex + '</td>' + '<td><button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" onclick="open_edit_dialog(' + i + ')">编辑</button></td>' + '<td><button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" onclick="open_delete_dialog(' + i + ')">删除</button></td>';
+                    oTab.appendChild(oTr);
+                }
+
+                mdui.mutation();
+            }
+            else if (1 == d.status) {
+                mdui.alert(d.message);
+            }
+            pnum = document.getElementById('page_num');
+            if (parseInt(pnum.value) == 1) {
+                up_button.setAttribute('disabled', '');
+                first_button.setAttribute('disabled', '');
+            }
+            if (parseInt(pnum.value) == page_count) {
+                down_button.setAttribute('disabled', '');
+                last_button.setAttribute('disabled', '');
+            }
+        })
+    }
+
+    function delete_user(){
+        $.post('/api/users/admin_delete', {'id': delete_uid}, function (d) {
+            if (0 == d.status) {
+                delete_dialog.close();
+                mdui.alert(d.message);
+                pnum = document.getElementById('page_num');
+                    load_user_onbutton(pnum.value);
+            }
+            else if (1 == d.status) {
+                mdui.alert(d.message,d.error_message);
+            }
+            else {
+                mdui.alert(d.message);
+            }
+        })
+    }
+
+    get_page_num();
+    load_user_onbutton(1);
+</script>
+</body>
+</html>
